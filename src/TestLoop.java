@@ -4,10 +4,9 @@ import models.RawModel;
 import models.TexturedModel;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
-import render_engine.DefaultRenderer;
 import render_engine.DisplayManager;
 import render_engine.Loader;
-import shader_programs.DefaultShader;
+import render_engine.MasterRenderer;
 import textures.ModelTexture;
 
 public class TestLoop {
@@ -15,9 +14,7 @@ public class TestLoop {
     public static void main(String[] args){
         DisplayManager.createDisplay();
         Loader loader = new Loader();
-        DefaultShader shader = new DefaultShader();
-        DefaultRenderer renderer = new DefaultRenderer(shader);
-
+        MasterRenderer renderer = new MasterRenderer();
 
         float[] vertices = {
                 -0.5f, 0.5f, 0f,
@@ -41,21 +38,18 @@ public class TestLoop {
         RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
         ModelTexture texture = new ModelTexture(loader.loadTexture("grass"));
         TexturedModel texturedModel = new TexturedModel(model, texture);
-        Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -2.5f), 0, 0, 0, 1);
+        Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -5f), 0, 0, 0, 1);
         Camera camera = new Camera();
 
         while(!Display.isCloseRequested()){
-            renderer.prepare();
             camera.move();
 
-            shader.start();
-            shader.loadViewMatrix(camera);
-            renderer.render(entity, shader);
-            shader.stop();
+            renderer.processEntity(entity);
 
+            renderer.render(camera);
             DisplayManager.updateDisplay();
         }
-        shader.clean();
+        renderer.clean();
         loader.clean();
         DisplayManager.closeDisplay();
     }

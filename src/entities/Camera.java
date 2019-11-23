@@ -1,6 +1,7 @@
 package entities;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
@@ -9,6 +10,8 @@ public class Camera {
     private float pitch;
     private float yaw;
     private float roll;
+
+    //TODO add mouse trackability
 
     public void move(){
         if(Keyboard.isKeyDown(Keyboard.KEY_W)){
@@ -61,5 +64,19 @@ public class Camera {
 
     public void setRoll(float roll) {
         this.roll = roll;
+    }
+
+    private void calculatePitch() {
+        if(Mouse.isButtonDown(1)) {
+            float pitchChange = Mouse.getDY() * 0.1f;
+            pitch -= pitchChange;
+        }
+    }
+
+    private void calculateAngleAroundPlayer() {
+        if (Mouse.isButtonDown(0)) {
+            float angleChange = Mouse.getDX() * 0.3f;
+            yaw -= angleChange;
+        }
     }
 }
