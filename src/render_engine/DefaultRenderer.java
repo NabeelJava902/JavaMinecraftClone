@@ -30,7 +30,7 @@ public class DefaultRenderer {
                 prepareInstance(entity);
                 GL11.glDrawElements(GL11.GL_TRIANGLES, model.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
             }
-            unibindTexturedModel();
+            unbindTexturedModel();
         }
     }
 
@@ -43,7 +43,7 @@ public class DefaultRenderer {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
     }
 
-    private void unibindTexturedModel(){
+    private void unbindTexturedModel(){
         GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(0);
         GL30.glBindVertexArray(0);

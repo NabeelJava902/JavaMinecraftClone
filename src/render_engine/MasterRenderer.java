@@ -1,6 +1,6 @@
 package render_engine;
 
-import entities.Camera;
+import camera.Camera;
 import entities.Entity;
 import models.TexturedModel;
 import org.lwjgl.opengl.Display;

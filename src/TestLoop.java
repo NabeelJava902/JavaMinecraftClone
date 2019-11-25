@@ -1,4 +1,5 @@
-import entities.Camera;
+import camera.Camera;
+import camera.FocalPoint;
 import entities.Entity;
 import models.RawModel;
 import models.TexturedModel;
@@ -39,10 +40,12 @@ public class TestLoop {
         ModelTexture texture = new ModelTexture(loader.loadTexture("grass"));
         TexturedModel texturedModel = new TexturedModel(model, texture);
         Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -5f), 0, 0, 0, 1);
-        Camera camera = new Camera();
+        FocalPoint focalPoint = new FocalPoint(new Vector3f(0, 0, 0), 0, 0, 0);
+        Camera camera = new Camera(focalPoint);
 
         while(!Display.isCloseRequested()){
             camera.move();
+            focalPoint.move();
 
             renderer.processEntity(entity);
 

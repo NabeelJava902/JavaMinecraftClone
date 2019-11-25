@@ -1,6 +1,6 @@
 package shader_programs;
 
-import entities.Camera;
+import camera.Camera;
 import org.lwjgl.util.vector.Matrix4f;
 import utils.Maths;
 
