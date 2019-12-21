@@ -14,6 +14,7 @@ import java.util.Map;
 public class DefaultRenderer {
 
     private DefaultShader shader;
+    private Matrix4f transformationMatrix;
 
     public DefaultRenderer(DefaultShader shader, Matrix4f projectionMatrix){
         this.shader = shader;
@@ -50,7 +51,7 @@ public class DefaultRenderer {
     }
 
     private void prepareInstance(Entity entity){
-        Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
+       transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
                 entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
         shader.loadTransformationMatrix(transformationMatrix);
     }

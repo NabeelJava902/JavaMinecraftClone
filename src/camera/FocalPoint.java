@@ -3,84 +3,71 @@ package camera;
 import entities.Player;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import render_engine.DisplayManager;
 
 public class FocalPoint {
 
     private Vector3f position;
-    private float rotX, rotY, rotZ;
-    private Player player = null;
+    private Player player;
 
-    private static final float RUN_SPEED = 50; //units per second
+    protected float pitchChange = 0;
+    protected float angleChange = 0;
 
-    private float currentSpeed = 0;
-    private Vector2f viewAngleChange;
+    private float cameraYaw = 0;
+    private float cameraPitch = 0;
 
-    public FocalPoint(Vector3f position, float rotX, float rotY, float rotZ, Player player){
-        this.player = player;
+    private static final float RUN_SPEED = 50;
+
+    private float current_speed = 0;
+
+    public FocalPoint(Vector3f position) {
         this.position = position;
-        this.rotX = rotX;
-        this.rotY = rotY;
-        this.rotZ = rotZ;
     }
 
-    public FocalPoint(Vector3f position, float rotX, float rotY, float rotZ) {
+    public FocalPoint(Vector3f position, Player player){
         this.position = position;
-        this.rotX = rotX;
-        this.rotY = rotY;
-        this.rotZ = rotZ;
+        this.player = player;
     }
 
     public void move(){
-        if(player != null){
-            checkInputs();
-            this.rotX += viewAngleChange.x;
-            this.rotY += viewAngleChange.y;
-        }
+        checkInputs();
+        float distance = current_speed * DisplayManager.getFrameTimeSeconds();
+        float dx = (float) (distance * Math.sin(Math.toRadians(-cameraYaw)));
+        float dz = (float) (distance * Math.cos(Math.toRadians(-cameraYaw)));
+        float dy = (float) (distance * Math.sin(Math.toRadians(cameraPitch)));
+        increasePosition(dx, dy, dz);
     }
 
     private void checkInputs(){
-        /*switch(Keyboard.getEventKey()){
-            case Keyboard.KEY_W: currentSpeed = RUN_SPEED;
-                break;
-            case Keyboard.KEY_S: currentSpeed = -RUN_SPEED;
-                break;
-        }*/
-        viewAngleChange.x = Mouse.getDX() * 0.3f;
-        viewAngleChange.y = Mouse.getDY() * 0.1f;
-
+        if(Keyboard.isKeyDown(Keyboard.KEY_W)){
+            current_speed = -RUN_SPEED;
+        }else if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
+            current_speed = RUN_SPEED;
+        }else{
+            current_speed *= 0.92;
+        }
+        float mouseX = Mouse.getDX();
+        float mouseY = Mouse.getDY();
+        angleChange = mouseX * 0.05f;
+        pitchChange = mouseY * 0.15f;
     }
 
     public Vector3f getPosition() {
         return position;
     }
 
-    public void setPosition(Vector3f position) {
-        this.position = position;
+    protected void setCameraYaw(float yaw){
+        cameraYaw = yaw;
     }
 
-    public float getRotX() {
-        return rotX;
+    protected void setCameraPitch(float pitch){
+        cameraPitch = pitch;
     }
 
-    public void setRotX(float rotX) {
-        this.rotX = rotX;
-    }
-
-    public float getRotY() {
-        return rotY;
-    }
-
-    public void setRotY(float rotY) {
-        this.rotY = rotY;
-    }
-
-    public float getRotZ() {
-        return rotZ;
-    }
-
-    public void setRotZ(float rotZ) {
-        this.rotZ = rotZ;
+    public void increasePosition(float dx, float dy, float dz){
+        this.position.x += dx;
+        this.position.y += dy;
+        this.position.z += dz;
     }
 }

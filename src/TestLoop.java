@@ -10,12 +10,15 @@ import render_engine.Loader;
 import render_engine.MasterRenderer;
 import textures.ModelTexture;
 
+import java.util.Random;
+
 public class TestLoop {
 
     public static void main(String[] args){
         DisplayManager.createDisplay();
         Loader loader = new Loader();
         MasterRenderer renderer = new MasterRenderer();
+        Random rand = new Random();
 
         float[] vertices = {
                 -0.5f, 0.5f, 0f,
@@ -39,15 +42,25 @@ public class TestLoop {
         RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
         ModelTexture texture = new ModelTexture(loader.loadTexture("grass"));
         TexturedModel texturedModel = new TexturedModel(model, texture);
-        Entity entity = new Entity(texturedModel, new Vector3f(0, 0, -5f), 0, 0, 0, 1);
-        FocalPoint focalPoint = new FocalPoint(new Vector3f(0, 0, 0), 0, 0, 0);
+
+        Entity[] entities = new Entity[60];
+        for(int i=0; i<entities.length; i++){
+            float x = (float) rand.nextInt(50);
+            float y = (float) rand.nextInt(50);
+            float z = (float) rand.nextInt(50);
+            entities[i] = new Entity(texturedModel, new Vector3f(x, y, z), 0, 0, 0, 1);
+        }
+
+        FocalPoint focalPoint = new FocalPoint(new Vector3f(25, 25, 25));
         Camera camera = new Camera(focalPoint);
 
         while(!Display.isCloseRequested()){
-            camera.move();
             focalPoint.move();
+            camera.update();
 
-            renderer.processEntity(entity);
+            for(Entity entity : entities){
+                renderer.processEntity(entity);
+            }
 
             renderer.render(camera);
             DisplayManager.updateDisplay();

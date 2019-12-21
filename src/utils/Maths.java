@@ -30,4 +30,13 @@ public class Maths {
         Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
         return viewMatrix;
     }
+
+    public static float restrict(float num, float min, float max){
+        if(num < min){
+            num = min;
+        }else if(num > max){
+            num = max;
+        }
+        return num;
+    }
 }
