@@ -6,8 +6,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 import render_engine.DisplayManager;
 
-import java.security.Key;
-
 public class FocalPoint {
 
     private Vector3f position;

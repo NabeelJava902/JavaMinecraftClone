@@ -20,9 +20,9 @@ public class MasterRenderer {
     private static final float FAR_PLANE = 1000;
     private Matrix4f projectionMatrix;
 
-    private static final float RED = 0.5f;
-    private static final float GREEN = 0.5f;
-    private static final float BLUE = 0.5f;
+    private static final float RED = 0;
+    private static final float GREEN = 255;
+    private static final float BLUE = 255;
 
     private DefaultShader defShader = new DefaultShader();
     private DefaultRenderer defRenderer;
@@ -50,10 +50,19 @@ public class MasterRenderer {
     }
 
     public MasterRenderer(){
-        //GL11.glEnable(GL11.GL_CULL_FACE);
-        //GL11.glCullFace(GL11.GL_BACK);
+        enableCulling();
         createProjectionMatrix();
         defRenderer = new DefaultRenderer(defShader, projectionMatrix);
+    }
+
+    protected static void enableCulling(){
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK);
+    }
+
+    protected static void disableCulling(){
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK);
     }
 
     public void clean(){

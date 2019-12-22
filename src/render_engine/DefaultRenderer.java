@@ -16,14 +16,14 @@ public class DefaultRenderer {
     private DefaultShader shader;
     private Matrix4f transformationMatrix;
 
-    public DefaultRenderer(DefaultShader shader, Matrix4f projectionMatrix){
+    protected DefaultRenderer(DefaultShader shader, Matrix4f projectionMatrix){
         this.shader = shader;
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();
     }
 
-    public void render(Map<TexturedModel, List<Entity>> entities){
+    protected void render(Map<TexturedModel, List<Entity>> entities){
         for(TexturedModel model : entities.keySet()){
             prepareTexturedModel(model);
             List<Entity> batch = entities.get(model);
@@ -40,11 +40,15 @@ public class DefaultRenderer {
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
+        if(model.getTexture().isHasTransparency()){
+            MasterRenderer.disableCulling();
+        }
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
     }
 
     private void unbindTexturedModel(){
+        MasterRenderer.enableCulling();
         GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(0);
         GL30.glBindVertexArray(0);

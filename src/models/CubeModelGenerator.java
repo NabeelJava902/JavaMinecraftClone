@@ -13,7 +13,7 @@ import static textures.TextureAtlas.goldOreTexture;
 import static textures.TextureAtlas.treeBarkTexture;
 import static textures.TextureAtlas.treeLeafTexture;
 
-public class CubeGenerator {
+public class CubeModelGenerator {
 
     private Loader loader = new Loader();
 
@@ -125,6 +125,7 @@ public class CubeGenerator {
                     break;
                 case TREE_LEAF:
                     texturedCube = new TexturedModel(cube, treeLeafTexture);
+                    texturedCube.getTexture().setHasTransparency(true);
                     break;
             }
         }catch (NullTexturedCubeException e){
