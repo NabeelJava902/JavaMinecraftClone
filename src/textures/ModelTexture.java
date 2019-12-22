@@ -4,7 +4,7 @@ public class ModelTexture {
 
     private int textureID;
 
-    public ModelTexture(int textureID) {
+    protected ModelTexture(int textureID) {
         this.textureID = textureID;
     }
 

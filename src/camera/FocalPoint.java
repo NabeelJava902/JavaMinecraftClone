@@ -6,6 +6,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 import render_engine.DisplayManager;
 
+import java.security.Key;
+
 public class FocalPoint {
 
     private Vector3f position;
@@ -17,7 +19,7 @@ public class FocalPoint {
     private float cameraYaw = 0;
     private float cameraPitch = 0;
 
-    private static final float RUN_SPEED = 50;
+    private static final float RUN_SPEED = 10;
 
     private float current_speed = 0;
 
@@ -46,6 +48,11 @@ public class FocalPoint {
             current_speed = RUN_SPEED;
         }else{
             current_speed *= 0.92;
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_D)){
+            increasePosition(0.1f, 0, 0);
+        }else if(Keyboard.isKeyDown(Keyboard.KEY_A)){
+            increasePosition(-0.1f, 0, 0);
         }
         float mouseX = Mouse.getDX();
         float mouseY = Mouse.getDY();
