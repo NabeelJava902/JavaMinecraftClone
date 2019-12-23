@@ -2,6 +2,7 @@ package render_engine;
 
 import camera.Camera;
 import entities.Entity;
+import entities.Light;
 import models.TexturedModel;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -29,6 +30,15 @@ public class MasterRenderer {
 
     private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
 
+    public void render(Camera camera, Light sun){
+        prepare();
+        defShader.start();
+        defShader.loadLight(sun);
+        defShader.loadViewMatrix(camera);
+        defRenderer.render(entities);
+        defShader.stop();
+    }
+
     public void render(Camera camera){
         prepare();
         defShader.start();
@@ -50,19 +60,8 @@ public class MasterRenderer {
     }
 
     public MasterRenderer(){
-        enableCulling();
         createProjectionMatrix();
         defRenderer = new DefaultRenderer(defShader, projectionMatrix);
-    }
-
-    protected static void enableCulling(){
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glCullFace(GL11.GL_BACK);
-    }
-
-    protected static void disableCulling(){
-        GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glCullFace(GL11.GL_BACK);
     }
 
     public void clean(){

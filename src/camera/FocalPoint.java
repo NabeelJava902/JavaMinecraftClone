@@ -47,18 +47,13 @@ public class FocalPoint {
         }else{
             current_speed *= 0.92;
         }
-        if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-            increasePosition(0.1f, 0, 0);
-        }else if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-            increasePosition(-0.1f, 0, 0);
-        }
         float mouseX = Mouse.getDX();
         float mouseY = Mouse.getDY();
         angleChange = mouseX * 0.05f;
         pitchChange = mouseY * 0.15f;
     }
 
-    public Vector3f getPosition() {
+    protected Vector3f getPosition() {
         return position;
     }
 
@@ -70,7 +65,7 @@ public class FocalPoint {
         cameraPitch = pitch;
     }
 
-    public void increasePosition(float dx, float dy, float dz){
+    private void increasePosition(float dx, float dy, float dz){
         this.position.x += dx;
         this.position.y += dy;
         this.position.z += dz;

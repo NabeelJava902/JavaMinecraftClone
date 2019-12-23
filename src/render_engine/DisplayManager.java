@@ -13,8 +13,6 @@ public class DisplayManager {
     private static long lastFrameTime;
     private static float delta;
 
-    //TODO set up vsync and other various opengl features for display
-
     public static void createDisplay(){
         PixelFormat format = new PixelFormat();
         ContextAttribs attribs = new ContextAttribs()
@@ -28,6 +26,7 @@ public class DisplayManager {
         GL11.glViewport(0, 0, WIDTH, HEIGHT);
         lastFrameTime = getCurrentTime();
         Display.setTitle("Minecraft Clone!");
+        Display.setVSyncEnabled(true);
     }
 
     public static void updateDisplay(){

@@ -1,4 +1,4 @@
-package utils;
+package world.cube;
 
 public enum CubeType {
 

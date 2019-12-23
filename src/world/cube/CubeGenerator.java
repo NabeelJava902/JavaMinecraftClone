@@ -1,7 +1,10 @@
-package models;
+package world.cube;
 
+import entities.Entity;
+import models.RawModel;
+import models.TexturedModel;
+import org.lwjgl.util.vector.Vector3f;
 import render_engine.Loader;
-import utils.CubeType;
 import utils.exceptions.NullTexturedCubeException;
 
 import static textures.TextureAtlas.grassTexture;
@@ -13,7 +16,7 @@ import static textures.TextureAtlas.goldOreTexture;
 import static textures.TextureAtlas.treeBarkTexture;
 import static textures.TextureAtlas.treeLeafTexture;
 
-public class CubeModelGenerator {
+public class CubeGenerator {
 
     private Loader loader = new Loader();
 
@@ -47,11 +50,9 @@ public class CubeModelGenerator {
             -0.5f,-0.5f,-0.5f,
             0.5f,-0.5f,-0.5f,
             0.5f,-0.5f,0.5f
-
     };
 
     private float[] textureCoords = {
-
             0,0,
             0,1,
             1,1,
@@ -76,8 +77,6 @@ public class CubeModelGenerator {
             0,1,
             1,1,
             1,0
-
-
     };
 
     private int[] indices = {
@@ -93,13 +92,26 @@ public class CubeModelGenerator {
             19,17,18,
             20,21,23,
             23,21,22
-
     };
 
-    public TexturedModel addCube(CubeType cubeType){
-        RawModel cube = loader.loadToVAO(vertices, textureCoords, indices);
-        TexturedModel texturedCube = null;
+    private float[] normals = {
+            -1.0f, 0.0f, 0.0f, // Left Side
+            0.0f, 0.0f, -1.0f, // Back Side
+            0.0f,-1.0f, 0.0f, // Bottom Side
+            0.0f, 0.0f, -1.0f, // Back Side
+            -1.0f, 0.0f, 0.0f, // Left Side
+            0.0f, -1.0f, 0.0f, // Bottom Side
+            0.0f, 0.0f, 1.0f, // front Side
+            1.0f, 0.0f, 0.0f, // right Side
+            1.0f, 0.0f, 0.0f, // right Side
+            0.0f, 1.0f, 0.0f, // top Side
+            0.0f, 1.0f, 0.0f, // top Side
+            0.0f, 0.0f, 1.0f, // front Side
+    };
 
+    public Entity addCube(CubeType cubeType, Vector3f position, float rotX, float rotY, float rotZ, float scale){
+        RawModel cube = loader.loadToVAO(vertices, textureCoords, normals, indices);
+        TexturedModel texturedCube = null;
         try {
             switch (cubeType) {
                 case GRASS:
@@ -133,6 +145,6 @@ public class CubeModelGenerator {
             e.printStackTrace();
         }
 
-        return texturedCube;
+        return new Entity(texturedCube, position, rotX, rotY, rotZ, scale);
     }
 }
