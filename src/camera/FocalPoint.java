@@ -1,15 +1,16 @@
 package camera;
 
 import entities.Player;
+import models.TexturedModel;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 import render_engine.DisplayManager;
+import world.terrains.FlatTerrain;
 
-public class FocalPoint {
+public class FocalPoint extends Player {
 
     private Vector3f position;
-    private Player player;
 
     protected float pitchChange = 0;
     protected float angleChange = 0;
@@ -21,16 +22,12 @@ public class FocalPoint {
 
     private float current_speed = 0;
 
-    public FocalPoint(Vector3f position) {
+    public FocalPoint(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+        super(model, position, rotX, rotY, rotZ, scale);
         this.position = position;
     }
 
-    public FocalPoint(Vector3f position, Player player){
-        this.position = position;
-        this.player = player;
-    }
-
-    public void move(){
+    public void move(FlatTerrain terrain){
         checkInputs();
         float distance = current_speed * DisplayManager.getFrameTimeSeconds();
         float dx = (float) (distance * Math.sin(Math.toRadians(-cameraYaw)));
@@ -39,7 +36,7 @@ public class FocalPoint {
         increasePosition(dx, dy, dz);
     }
 
-    private void checkInputs(){
+    protected void checkInputs(){
         if(Keyboard.isKeyDown(Keyboard.KEY_W)){
             current_speed = -RUN_SPEED;
         }else if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
@@ -47,13 +44,21 @@ public class FocalPoint {
         }else{
             current_speed *= 0.92;
         }
+        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+            Mouse.setGrabbed(false);
+        }else if(Mouse.isButtonDown(0)){
+            Mouse.setGrabbed(true);
+        }
         float mouseX = Mouse.getDX();
         float mouseY = Mouse.getDY();
         angleChange = mouseX * 0.05f;
         pitchChange = mouseY * 0.15f;
     }
 
-    protected Vector3f getPosition() {
+    @Override
+    protected void checkCollisions() {}
+
+    public Vector3f getPosition() {
         return position;
     }
 
@@ -65,7 +70,7 @@ public class FocalPoint {
         cameraPitch = pitch;
     }
 
-    private void increasePosition(float dx, float dy, float dz){
+    public void increasePosition(float dx, float dy, float dz){
         this.position.x += dx;
         this.position.y += dy;
         this.position.z += dz;

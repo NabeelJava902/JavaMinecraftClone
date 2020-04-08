@@ -1,149 +1,127 @@
 package camera;
 
+import entities.FirstPersonPlayer;
+import entities.Player;
+import entities.ThirdPersonPlayer;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
+
 import static utils.Maths.restrict;
 
 public class Camera{
 
+    private float distanceFromPlayer = 20;
+    private float angleAroundPlayer = 0;
+
     private Vector3f position = new Vector3f(0, 0, 0);
-    private FocalPoint focalPoint;
+    private FocalPoint focalPoint = null;
+    private ThirdPersonPlayer thirdPersonPlayer = null;
+    private FirstPersonPlayer firstPersonPlayer = null;
     private float pitch;
     private float yaw;
     private float roll;
+
+    //TODO restructure camera and how it behaves with settings
 
     public Camera(FocalPoint focalPoint){
         this.focalPoint = focalPoint;
         Mouse.setGrabbed(true);
     }
 
+    public Camera(ThirdPersonPlayer thirdPersonPlayer){
+        this.thirdPersonPlayer = thirdPersonPlayer;
+    }
+
+    public Camera(FirstPersonPlayer firstPersonPlayer){
+        this.firstPersonPlayer = firstPersonPlayer;
+        Mouse.setGrabbed(true);
+    }
+
     public void update(){
-        position.x = focalPoint.getPosition().x;
-        position.y = focalPoint.getPosition().y;
-        position.z = focalPoint.getPosition().z + 20;
-        pitch = restrict(pitch -= focalPoint.pitchChange, -90, 90);
-        yaw += focalPoint.angleChange;
-        if(yaw > 360 || yaw < -360){
-            yaw = 0;
+        if(focalPoint != null) {
+            position.x = focalPoint.getPosition().x;
+            position.y = focalPoint.getPosition().y;
+            position.z = focalPoint.getPosition().z + 20;
+            pitch = restrict(pitch -= focalPoint.pitchChange, -90, 90);
+            yaw += focalPoint.angleChange;
+            if (yaw > 360 || yaw < -360) {
+                yaw = 0;
+            }
+            focalPoint.setCameraPitch(pitch);
+            focalPoint.setCameraYaw(yaw);
+        }else if(thirdPersonPlayer != null){
+            calculateZoom();
+            calculatePitch();
+            calculateAngleAroundPlayer();
+            float horizontalDistance = calculateHorizontalDistance();
+            float verticalDistance = calculateVerticalDistance();
+            calculateCameraPosition(horizontalDistance, verticalDistance);
         }
-        focalPoint.setCameraPitch(pitch);
-        focalPoint.setCameraYaw(yaw);
     }
 
-    public Vector3f getPosition() {
-        return position;
-    }
-    public float getPitch() {
-        return pitch;
-    }
-    public float getYaw() {
-        return yaw;
-    }
-    public float getRoll() {
-        return roll;
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*import org.lwjgl.util.vector.Vector3f;
-
-public class Camera {
-
-    private Vector3f position = new Vector3f(0, 0, 0);
-    private float pitch;
-    private float yaw;
-    private float roll;
-
-    private FocalPoint focalPoint;
-
-    private float angleAroundPoint = 0;
-    private float distanceFromPoint = 50;
-
-    public Camera(FocalPoint focalPoint){
-        this.focalPoint = focalPoint;
-    }
-
-    public void move(){
-        calculateAngle();
-        calculatePitch();
-        float horizDist = calculateHorizontalDistance();
-        float vertDist = calculateVerticalDistance();
-        calculateCameraPosition(horizDist, vertDist);
-    }
-
-    private void calculateCameraPosition(float horizDist, float vertDist){
-        float theta = focalPoint.getRotY() + angleAroundPoint;
-        float offsetX = (float) (horizDist * Math.sin(Math.toRadians(theta)));
-        float offsetZ = (float) (horizDist * Math.cos(Math.toRadians(theta)));
-        this.position.x = focalPoint.getPosition().x - offsetX;
-        this.position.y = focalPoint.getPosition().y + vertDist;
-        this.position.z = focalPoint.getPosition().z - offsetZ;
+    private void calculateCameraPosition(float horizontalDist, float verticalDist) {
+        float theta = thirdPersonPlayer.getRotY() + angleAroundPlayer;
+        float offsetX = (float) (horizontalDist * Math.sin(Math.toRadians(theta)));
+        float offsetZ = (float) (horizontalDist * Math.cos(Math.toRadians(theta)));
+        position.x = thirdPersonPlayer.getPosition().x - offsetX;
+        position.z = thirdPersonPlayer.getPosition().z - offsetZ;
+        position.y = thirdPersonPlayer.getPosition().y + verticalDist + 10;
         yaw = 180 - theta;
     }
 
-    private float calculateVerticalDistance(){
-        return (float)Math.sin(Math.toRadians(pitch)) * distanceFromPoint;
+    private float calculateHorizontalDistance() {
+        return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
     }
 
-    private float calculateHorizontalDistance(){
-        return (float)Math.cos(Math.toRadians(pitch)) * distanceFromPoint;
+    private float calculateVerticalDistance() {
+        return (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch)))-5f;
     }
 
-    private void calculatePitch(){
-        float pitchChange = focalPoint.getRotY();
-        pitch -= pitchChange;
+    private void calculateZoom() {
+        float zoomLevel = Mouse.getDWheel() * 0.1f;
+        distanceFromPlayer -= zoomLevel;
+        if(distanceFromPlayer < 15) {
+            distanceFromPlayer = 15;
+        }else if(distanceFromPlayer > 90) {
+            distanceFromPlayer = 90;
+        }
     }
 
-    private void calculateAngle(){
-        float angleChange = focalPoint.getRotX();
-        angleAroundPoint -= angleChange;
+    private void calculatePitch() {
+        if(Mouse.isButtonDown(1)) {
+            float pitchChange = Mouse.getDY() * 0.1f;
+            pitch -= pitchChange;
+        }
+    }
+
+    private void calculateAngleAroundPlayer() {
+        if(Mouse.isButtonDown(0)) {
+            float angleChange = Mouse.getDX() * 0.3f;
+            angleAroundPlayer -= angleChange;
+        }
     }
 
     public Vector3f getPosition() {
         return position;
     }
-
     public float getPitch() {
         return pitch;
     }
-
     public float getYaw() {
         return yaw;
     }
-
     public float getRoll() {
         return roll;
     }
-}*/
+
+    public Player getPlayer(){
+        if(thirdPersonPlayer != null){
+            return thirdPersonPlayer;
+        }else if(focalPoint != null){
+            return focalPoint;
+        }else if(firstPersonPlayer != null){
+            return firstPersonPlayer;
+        }
+        return null;
+    }
+}

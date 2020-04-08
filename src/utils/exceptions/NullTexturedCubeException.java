@@ -1,7 +1,7 @@
 package utils.exceptions;
 
 import textures.ModelTexture;
-import textures.TextureAtlas;
+import textures.TextureSource;
 
 public class NullTexturedCubeException extends RuntimeException{
 
@@ -15,6 +15,6 @@ public class NullTexturedCubeException extends RuntimeException{
     }
 
     public ModelTexture setDefaultTexture(){
-        return TextureAtlas.grassTexture;
+        return TextureSource.grassTexture;
     }
 }

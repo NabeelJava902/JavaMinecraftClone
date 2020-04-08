@@ -7,14 +7,14 @@ import org.lwjgl.util.vector.Vector3f;
 import render_engine.Loader;
 import utils.exceptions.NullTexturedCubeException;
 
-import static textures.TextureAtlas.grassTexture;
-import static textures.TextureAtlas.dirtTexture;
-import static textures.TextureAtlas.stoneTexture;
-import static textures.TextureAtlas.ironOreTexture;
-import static textures.TextureAtlas.diamondOreTexture;
-import static textures.TextureAtlas.goldOreTexture;
-import static textures.TextureAtlas.treeBarkTexture;
-import static textures.TextureAtlas.treeLeafTexture;
+import static textures.TextureSource.grassTexture;
+import static textures.TextureSource.dirtTexture;
+import static textures.TextureSource.stoneTexture;
+import static textures.TextureSource.ironOreTexture;
+import static textures.TextureSource.diamondOreTexture;
+import static textures.TextureSource.goldOreTexture;
+import static textures.TextureSource.treeBarkTexture;
+import static textures.TextureSource.treeLeafTexture;
 
 public class CubeGenerator {
 

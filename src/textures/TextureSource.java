@@ -2,7 +2,7 @@ package textures;
 
 import render_engine.Loader;
 
-public class TextureAtlas {
+public class TextureSource {
 
     private static Loader loader = new Loader();
 
