@@ -27,6 +27,7 @@ public class FocalPoint extends Player {
         this.position = position;
     }
 
+    @Override
     public void move(FlatTerrain terrain){
         checkInputs();
         float distance = current_speed * DisplayManager.getFrameTimeSeconds();
@@ -36,6 +37,7 @@ public class FocalPoint extends Player {
         increasePosition(dx, dy, dz);
     }
 
+    @Override
     protected void checkInputs(){
         if(Keyboard.isKeyDown(Keyboard.KEY_W)){
             current_speed = -RUN_SPEED;

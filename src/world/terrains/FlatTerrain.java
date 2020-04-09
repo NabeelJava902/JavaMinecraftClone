@@ -22,7 +22,7 @@ public class FlatTerrain {
 
     public Entity[] generateTerrain(){
         CubeGenerator generator = new CubeGenerator();
-        Entity[] cubes = new Entity[length*width]; //TODO change to 2d array
+        Entity[] cubes = new Entity[length*width];
         float xPos = originX;
         float yPos = originY;
         float zPos = originZ;

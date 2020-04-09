@@ -1,8 +1,6 @@
 package entities;
 
-import models.RawModel;
 import models.TexturedModel;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 import render_engine.DisplayManager;
@@ -29,6 +27,7 @@ public class ThirdPersonPlayer extends Player{
         super(model, position, rotX, rotY, rotZ, scale);
     }
 
+    @Override
     public void move(FlatTerrain terrain){
         this.terrain = terrain;
         checkInputs();
@@ -47,6 +46,7 @@ public class ThirdPersonPlayer extends Player{
         upwardsSpeed = JUMP_HEIGHT;
     }
 
+    @Override
     protected void checkInputs(){
         if(Keyboard.isKeyDown(Keyboard.KEY_W)){
             currentSpeed = RUN_SPEED;
@@ -71,8 +71,13 @@ public class ThirdPersonPlayer extends Player{
             }
             isInAir = true;
         }
+        if(Keyboard.isKeyDown(Keyboard.KEY_R)){
+            teleportBack(terrain);
+            offTerrain = false;
+        }
     }
 
+    @Override
     protected void checkCollisions(){
         float terrainHeight = terrain.getOriginY();
         if(!offTerrain) {

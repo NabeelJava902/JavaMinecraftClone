@@ -1,6 +1,5 @@
 package camera;
 
-import entities.FirstPersonPlayer;
 import entities.Player;
 import entities.ThirdPersonPlayer;
 import org.lwjgl.input.Mouse;
@@ -16,12 +15,9 @@ public class Camera{
     private Vector3f position = new Vector3f(0, 0, 0);
     private FocalPoint focalPoint = null;
     private ThirdPersonPlayer thirdPersonPlayer = null;
-    private FirstPersonPlayer firstPersonPlayer = null;
     private float pitch;
     private float yaw;
     private float roll;
-
-    //TODO restructure camera and how it behaves with settings
 
     public Camera(FocalPoint focalPoint){
         this.focalPoint = focalPoint;
@@ -30,11 +26,6 @@ public class Camera{
 
     public Camera(ThirdPersonPlayer thirdPersonPlayer){
         this.thirdPersonPlayer = thirdPersonPlayer;
-    }
-
-    public Camera(FirstPersonPlayer firstPersonPlayer){
-        this.firstPersonPlayer = firstPersonPlayer;
-        Mouse.setGrabbed(true);
     }
 
     public void update(){
@@ -119,8 +110,6 @@ public class Camera{
             return thirdPersonPlayer;
         }else if(focalPoint != null){
             return focalPoint;
-        }else if(firstPersonPlayer != null){
-            return firstPersonPlayer;
         }
         return null;
     }
