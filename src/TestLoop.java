@@ -56,11 +56,12 @@ public class TestLoop {
         Entity playerSprite = cubeGenerator.addCube(CubeType.DIAMOND_ORE, new Vector3f(flatTerrain.getOriginX(), flatTerrain.getOriginY()+20, flatTerrain.getOriginZ()), 0, 0, 0, 1);
         ThirdPersonPlayer thirdPersonPlayer = new ThirdPersonPlayer(playerSprite.getModel(), playerSprite.getPosition(), 0, 0, 0, playerSprite.getScale());
 
-        Camera camera = new Camera(thirdPersonPlayer);
+        Camera camera = new Camera();
+        camera.setPlayer(focalPoint);
 
         while(!Display.isCloseRequested()){
-            camera.getPlayer().move(flatTerrain);
             camera.update();
+            camera.getPlayer().move(flatTerrain);
 
             renderer.processEntity(thirdPersonPlayer);
 

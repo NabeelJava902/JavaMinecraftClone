@@ -4,7 +4,10 @@ import models.TexturedModel;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 import render_engine.DisplayManager;
+import utils.PlayerID;
 import world.terrains.FlatTerrain;
+
+import static utils.PlayerID.thirdPersonPlayer;
 
 public class ThirdPersonPlayer extends Player{
 
@@ -25,6 +28,7 @@ public class ThirdPersonPlayer extends Player{
 
     public ThirdPersonPlayer(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
         super(model, position, rotX, rotY, rotZ, scale);
+        this.playerID = thirdPersonPlayer;
     }
 
     @Override
@@ -38,7 +42,6 @@ public class ThirdPersonPlayer extends Player{
         super.increasePosition(dx, 0, dz);
         upwardsSpeed += STATIC_GRAVITY * DisplayManager.getFrameTimeSeconds();
         super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-        //TODO fix terrain collision
         checkCollisions();
     }
 

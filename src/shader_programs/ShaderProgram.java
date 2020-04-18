@@ -14,7 +14,6 @@ import java.nio.FloatBuffer;
 public abstract class ShaderProgram {
 
     private int vertexID, fragmentID, programID;
-
     FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     public ShaderProgram(String vertexFile, String fragmentFile){

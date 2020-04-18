@@ -8,12 +8,14 @@ import org.lwjgl.util.vector.Vector3f;
 import render_engine.DisplayManager;
 import world.terrains.FlatTerrain;
 
+import static utils.PlayerID.focalPoint;
+
 public class FocalPoint extends Player {
 
     private Vector3f position;
 
-    protected float pitchChange = 0;
     protected float angleChange = 0;
+    protected float pitchChange = 0;
 
     private float cameraYaw = 0;
     private float cameraPitch = 0;
@@ -25,6 +27,7 @@ public class FocalPoint extends Player {
     public FocalPoint(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
         super(model, position, rotX, rotY, rotZ, scale);
         this.position = position;
+        this.playerID = focalPoint;
     }
 
     @Override

@@ -5,6 +5,9 @@ import entities.ThirdPersonPlayer;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
+import static utils.PlayerID.thirdPersonPlayer;
+import static utils.PlayerID.focalPoint;
+
 import static utils.Maths.restrict;
 
 public class Camera{
@@ -13,34 +16,28 @@ public class Camera{
     private float angleAroundPlayer = 0;
 
     private Vector3f position = new Vector3f(0, 0, 0);
-    private FocalPoint focalPoint = null;
-    private ThirdPersonPlayer thirdPersonPlayer = null;
+    private FocalPoint focalPointObject = null;
+    private ThirdPersonPlayer thirdPersonPlayerObject = null;
+    private Player player = null;
     private float pitch;
     private float yaw;
     private float roll;
 
-    public Camera(FocalPoint focalPoint){
-        this.focalPoint = focalPoint;
-        Mouse.setGrabbed(true);
-    }
-
-    public Camera(ThirdPersonPlayer thirdPersonPlayer){
-        this.thirdPersonPlayer = thirdPersonPlayer;
-    }
-
     public void update(){
-        if(focalPoint != null) {
-            position.x = focalPoint.getPosition().x;
-            position.y = focalPoint.getPosition().y;
-            position.z = focalPoint.getPosition().z + 20;
-            pitch = restrict(pitch -= focalPoint.pitchChange, -90, 90);
-            yaw += focalPoint.angleChange;
+        if(player.getPlayerID() == focalPoint) {
+            focalPointObject = (FocalPoint) player;
+            position.x = focalPointObject.getPosition().x;
+            position.y = focalPointObject.getPosition().y;
+            position.z = focalPointObject.getPosition().z + 20;
+            pitch = restrict(pitch -= focalPointObject.pitchChange, -90, 90);
+            yaw += focalPointObject.angleChange;
             if (yaw > 360 || yaw < -360) {
                 yaw = 0;
             }
-            focalPoint.setCameraPitch(pitch);
-            focalPoint.setCameraYaw(yaw);
-        }else if(thirdPersonPlayer != null){
+            focalPointObject.setCameraPitch(pitch);
+            focalPointObject.setCameraYaw(yaw);
+        }else if(player.getPlayerID() == thirdPersonPlayer){
+            thirdPersonPlayerObject = (ThirdPersonPlayer) player;
             calculateZoom();
             calculatePitch();
             calculateAngleAroundPlayer();
@@ -51,12 +48,12 @@ public class Camera{
     }
 
     private void calculateCameraPosition(float horizontalDist, float verticalDist) {
-        float theta = thirdPersonPlayer.getRotY() + angleAroundPlayer;
+        float theta = thirdPersonPlayerObject.getRotY() + angleAroundPlayer;
         float offsetX = (float) (horizontalDist * Math.sin(Math.toRadians(theta)));
         float offsetZ = (float) (horizontalDist * Math.cos(Math.toRadians(theta)));
-        position.x = thirdPersonPlayer.getPosition().x - offsetX;
-        position.z = thirdPersonPlayer.getPosition().z - offsetZ;
-        position.y = thirdPersonPlayer.getPosition().y + verticalDist + 10;
+        position.x = thirdPersonPlayerObject.getPosition().x - offsetX;
+        position.z = thirdPersonPlayerObject.getPosition().z - offsetZ;
+        position.y = thirdPersonPlayerObject.getPosition().y + verticalDist + 10;
         yaw = 180 - theta;
     }
 
@@ -106,11 +103,15 @@ public class Camera{
     }
 
     public Player getPlayer(){
-        if(thirdPersonPlayer != null){
-            return thirdPersonPlayer;
-        }else if(focalPoint != null){
-            return focalPoint;
+        if(thirdPersonPlayerObject != null){
+            return thirdPersonPlayerObject;
+        }else if(focalPointObject != null){
+            return focalPointObject;
         }
         return null;
+    }
+
+    public void setPlayer(Player player){
+        this.player = player;
     }
 }
